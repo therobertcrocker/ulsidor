@@ -1,0 +1,75 @@
+{
+    "quests": [
+      {
+        "id": "ex_q1",
+        "title": "The Lost Artifact",
+        "quest_type": "acquisition",
+        "status": "active",
+        "description": "Retrieve the ancient artifact from the haunted ruins.",
+        "level": 2,
+        "source": "Elder Jonas",
+        "reward": {
+          "experience": 250,
+          "gold": 50,
+          "treasure_rating": 2,
+          "reputation": 5
+        },
+        "objectives": [
+          {
+            "id": "obj1",
+            "title": "Enter the ruins.",
+            "completed": false,
+            "description": "Locate the entrance to the haunted ruins."
+          },
+          {
+            "id": "obj2",
+            "title": "Find the artifact.",
+            "completed": false,
+            "description": "Search for the artifact within the ruins."
+          },
+          {
+            "id": "obj3",
+            "title": "Return to Elder Jonas.",
+            "completed": false,
+            "description": "Bring the artifact back to Elder Jonas in the village."
+          }
+        ]
+      },
+      {
+        "id": "ex_q2",
+        "title": "Silencing the Whispers",
+        "quest_type": "hunt",
+        "status": "inactive",
+        "description": "Eliminate the group of necromancers raising the dead.",
+        "level": 3,
+        "source": "Captain Lina",
+        "reward": {
+          "experience": 400,
+          "gold": 80,
+          "treasure_rating": 3,
+          "reputation": 10
+        },
+        "objectives": [
+          {
+            "id": "obj4",
+            "title": "Locate the necromancers' hideout.",
+            "completed": false,
+            "description": "Gather information on the whereabouts of the necromancers."
+          },
+          {
+            "id": "obj5",
+            "title": "Defeat the necromancers.",
+            "completed": false,
+            "description": "Put an end to the necromancers' dark rituals."
+          },
+          {
+            "id": "obj6",
+            "title": "Report back to Captain Lina.",
+            "completed": false,
+            "description": "Update Captain Lina on the mission's progress."
+          }
+        ]
+      }
+    ]
+  }
+  
