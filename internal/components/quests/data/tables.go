@@ -1,6 +1,6 @@
-package quests
+package data
 
-var expPerLevel = map[int]int{
+var ExpPerLevel = map[int]int{
 	-2: 200,
 	-1: 400,
 	0:  500,
@@ -9,19 +9,19 @@ var expPerLevel = map[int]int{
 	3:  1000,
 }
 
-var expNeeded = 1000
+var ExpNeeded = 1000
 
-func missionsPerLevel(relativeLevel int) int {
-	return expNeeded / expPerLevel[relativeLevel]
+func MissionsPerLevel(relativeLevel int) int {
+	return ExpNeeded / ExpPerLevel[relativeLevel]
 }
 
-var classMultiplier = map[string]int{
+var ClassMultiplier = map[string]int{
 	"hunt":        2,
 	"acquisition": -1,
 	"whisper":     1,
 	"Knowledge":   0,
 }
-var goldbyLevel = map[int]int{
+var GoldByLevel = map[int]int{
 	1:  13,
 	2:  23,
 	3:  40,
