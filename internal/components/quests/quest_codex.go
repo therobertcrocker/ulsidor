@@ -1,16 +1,20 @@
 package quests
 
-import "github.com/therobertcrocker/ulsidor/internal/config"
+import (
+	"fmt"
+
+	"github.com/therobertcrocker/ulsidor/internal/config"
+)
 
 type QuestCodex struct {
-	gameData *config.GameData
-	repo     QuestRepository
+	questConfig *config.Config
+	repo        QuestRepository
 }
 
-func NewQuestCodex(repo QuestRepository, data *config.GameData) *QuestCodex {
+func NewQuestCodex(repo QuestRepository, conf *config.Config) *QuestCodex {
 	return &QuestCodex{
-		repo:     repo,
-		gameData: data,
+		repo:        repo,
+		questConfig: conf,
 	}
 }
 
@@ -25,8 +29,8 @@ func (qc *QuestCodex) CreateNewQuest(title, questType, description, source strin
 		Source:      source,
 		Level:       level,
 	}
-
-	quest.CalculateRewards(qc.gameData.PartyLevel)
+	fmt.Println(qc.questConfig.GameData.PartyLevel)
+	quest.CalculateRewards(qc.questConfig.GameData.PartyLevel)
 	err := qc.repo.AddNewQuest(quest)
 	if err != nil {
 		return nil, err

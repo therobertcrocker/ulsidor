@@ -3,6 +3,7 @@ package quests
 import (
 	"errors"
 
+	"github.com/therobertcrocker/ulsidor/internal/config"
 	"github.com/therobertcrocker/ulsidor/internal/interfaces"
 	"github.com/therobertcrocker/ulsidor/internal/storage"
 )
@@ -17,15 +18,16 @@ type QuestRepository interface {
 }
 
 type QuestRepo struct {
-	Quests  map[string]Quest
-	Storage interfaces.StorageManager
+	Quests       map[string]Quest
+	Storage      interfaces.StorageManager
+	questsConfig *config.Config
 }
 
 // NewQuestRepo returns a new instance of QuestRepo.
-func NewQuestRepo() *QuestRepo {
+func NewQuestRepo(conf *config.Config) *QuestRepo {
 	return &QuestRepo{
 		Quests:  make(map[string]Quest),
-		Storage: storage.NewJSONStorageManager(),
+		Storage: storage.NewJSONStorageManager(conf),
 	}
 }
 

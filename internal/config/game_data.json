@@ -1,3 +1,7 @@
 {
-    "party_level": 6
+    "log_level": "debug",
+    "base_path": "/home/gestalt/code/go_projects/ulsidor/",
+    "game_data": {
+        "party_level": 6
+    }
 }

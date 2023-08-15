@@ -5,24 +5,32 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/therobertcrocker/ulsidor/internal/config"
 	"github.com/therobertcrocker/ulsidor/internal/interfaces"
 )
 
-type JSONStorageManager struct{}
+type JSONStorageManager struct {
+	storageConfig *config.Config
+}
 
 // NewJSONStorageManager returns a new instance of JSONStorageManager
-func NewJSONStorageManager() *JSONStorageManager {
-	return &JSONStorageManager{}
+func NewJSONStorageManager(conf *config.Config) *JSONStorageManager {
+	return &JSONStorageManager{
+		storageConfig: conf,
+	}
 }
 
 // LoadRepo loads a repo from storage
 func (jsm *JSONStorageManager) LoadRepo(id string, repo interfaces.Repository) error {
-	filepath := filepath.Join("save_data/", id+".json")
-	data, err := os.ReadFile(filepath)
+	baseDir := jsm.storageConfig.BasePath
+	storagePath := filepath.Join(baseDir, "internal/storage/save_data/"+id+".json")
+	data, err := os.ReadFile(storagePath)
 	if err != nil {
+		config.Log.Errorf("Failed to load repo from file: %v", err)
 		return err
 	}
 	if err := json.Unmarshal(data, &repo); err != nil {
+		config.Log.Errorf("Failed to unmarshall json: %v", err)
 		return err
 	}
 
@@ -32,12 +40,13 @@ func (jsm *JSONStorageManager) LoadRepo(id string, repo interfaces.Repository) e
 
 // SaveRepo saves a repo to storage
 func (jsm *JSONStorageManager) SaveRepo(id string, repo interfaces.Repository) error {
-	filepath := filepath.Join("save_data/", id+".json")
+	baseDir := jsm.storageConfig.BasePath
+	storagePath := filepath.Join(baseDir, "internal/storage/save_data/"+id+".json")
 	data, err := json.Marshal(repo)
 	if err != nil {
 		return err
 	}
-	if err := os.WriteFile(filepath, data, 0644); err != nil {
+	if err := os.WriteFile(storagePath, data, 0644); err != nil {
 		return err
 	}
 	return nil

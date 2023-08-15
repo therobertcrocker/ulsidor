@@ -12,6 +12,9 @@ var ExpPerLevel = map[int]int{
 var ExpNeeded = 1000
 
 func MissionsPerLevel(relativeLevel int) int {
+	if relativeLevel < -2 {
+		return ExpNeeded / ExpPerLevel[-2]
+	}
 	return ExpNeeded / ExpPerLevel[relativeLevel]
 }
 

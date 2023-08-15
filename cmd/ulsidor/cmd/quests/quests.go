@@ -13,7 +13,7 @@ func NewQuestsCmd(core *core.Core) *cobra.Command {
 	questsCmd := &cobra.Command{
 		Use:   "quests",
 		Short: "Commands for managing quests",
-		Run: func(cmd *cobra.Command, args []string) {
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			coreInstance.InitQuestComponents()
 			// ... other code ...
 		},
