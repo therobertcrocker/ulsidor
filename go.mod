@@ -17,6 +17,7 @@ require (
 	github.com/go-text/typesetting v0.0.0-20230502123426-87572f5551cf // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.7.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tdewolff/minify/v2 v2.12.4 // indirect
