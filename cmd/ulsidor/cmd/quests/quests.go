@@ -4,8 +4,6 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package quests
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/therobertcrocker/ulsidor/cmd/ulsidor/cmd"
 )
@@ -14,8 +12,8 @@ import (
 var questsCmd = &cobra.Command{
 	Use:   "quests",
 	Short: "Commands for managing quests",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("quests called")
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+
 	},
 }
 
