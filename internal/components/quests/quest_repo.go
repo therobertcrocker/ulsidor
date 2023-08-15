@@ -9,6 +9,7 @@ import (
 
 // QuestRepository defines the operations that a QuestRepo should support.
 type QuestRepository interface {
+	interfaces.Repository
 	GetQuestByID(id string) (*Quest, error)
 	AddNewQuest(quest *Quest) error
 	UpdateQuest(id string, quest *Quest) error
