@@ -1,6 +1,7 @@
 package quests
 
 import (
+	"encoding/json"
 	"errors"
 
 	"github.com/therobertcrocker/ulsidor/internal/config"
@@ -12,23 +13,41 @@ import (
 type QuestRepository interface {
 	interfaces.Repository
 	GetQuestByID(id string) (*Quest, error)
+	InitQuestRepo() error
 	AddNewQuest(quest *Quest) error
 	UpdateQuest(id string, quest *Quest) error
 	DeleteQuest(id string) error
 }
 
 type QuestRepo struct {
-	Quests       map[string]Quest
+	Metadata     interfaces.Metadata `json:"metadata"`
+	Quests       map[string]Quest    `json:"quests"`
 	Storage      interfaces.StorageManager
 	questsConfig *config.Config
+}
+
+type QuestFile struct {
+	Metadata interfaces.Metadata `json:"metadata"`
+	Data     map[string]Quest    `json:"data"`
 }
 
 // NewQuestRepo returns a new instance of QuestRepo.
 func NewQuestRepo(conf *config.Config) *QuestRepo {
 	return &QuestRepo{
-		Quests:  make(map[string]Quest),
-		Storage: storage.NewJSONStorageManager(conf),
+		Quests:       make(map[string]Quest),
+		Storage:      storage.NewJSONStorageManager(conf),
+		questsConfig: conf,
 	}
+}
+
+// InitQuestRepo initializes the quest repository
+func (qr *QuestRepo) InitQuestRepo() error {
+	err := qr.Storage.LoadRepo("quests", qr)
+	if err != nil {
+		config.Log.Errorf("Failed to load quest repository: %v", err)
+		return err
+	}
+	return nil
 }
 
 // GetQuestByID fetches a quest by ID.
@@ -45,6 +64,7 @@ func (qr *QuestRepo) AddNewQuest(quest *Quest) error {
 		return errors.New("quest already exists")
 	}
 	qr.Quests[quest.ID] = *quest
+	qr.Storage.SaveRepo("quests", qr)
 	return nil
 }
 
@@ -66,12 +86,23 @@ func (qr *QuestRepo) DeleteQuest(id string) error {
 	return nil
 }
 
-// LoadFromStorage loads the quests from storage.
-func (qr *QuestRepo) LoadFromStorage(id string) error {
-	return qr.Storage.LoadRepo(id, qr)
+// Serialize serializes the repo to JSON.
+func (qr *QuestRepo) Serialize() ([]byte, error) {
+	questsFile := QuestFile{
+		Metadata: qr.Metadata,
+		Data:     qr.Quests,
+	}
+	return json.Marshal(questsFile)
 }
 
-// SaveToStorage saves the quests to storage.
-func (qr *QuestRepo) SaveToStorage(id string) error {
-	return qr.Storage.SaveRepo(id, qr)
+// Deserialize deserializes the repo from JSON.
+func (qr *QuestRepo) Deserialize(data []byte) error {
+	var questsFile QuestFile
+	if err := json.Unmarshal(data, &questsFile); err != nil {
+		return err
+	}
+	qr.Metadata = questsFile.Metadata
+	qr.Quests = questsFile.Data
+
+	return nil
 }
