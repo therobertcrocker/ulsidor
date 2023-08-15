@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"encoding/json"
 	"os"
 	"path/filepath"
 
@@ -20,48 +19,29 @@ func NewJSONStorageManager(conf *config.Config) *JSONStorageManager {
 	}
 }
 
-// LoadRepo loads a repo from storage
+// LoadRepo loads data from storage into a repository.
 func (jsm *JSONStorageManager) LoadRepo(id string, repo interfaces.Repository) error {
 	baseDir := jsm.storageConfig.BasePath
 	storagePath := filepath.Join(baseDir, "internal/storage/save_data/"+id+".json")
-	data, err := os.ReadFile(storagePath)
+	fileData, err := os.ReadFile(storagePath)
 	if err != nil {
-		config.Log.Errorf("Failed to load repo from file: %v", err)
 		return err
 	}
-	if err := json.Unmarshal(data, &repo); err != nil {
-		config.Log.Errorf("Failed to unmarshall json: %v", err)
-		return err
-	}
-
-	return nil
-
+	return repo.Deserialize(fileData)
 }
 
-// SaveRepo saves a repo to storage
+// SaveRepo saves data from a repository to storage.
 func (jsm *JSONStorageManager) SaveRepo(id string, repo interfaces.Repository) error {
 	baseDir := jsm.storageConfig.BasePath
 	storagePath := filepath.Join(baseDir, "internal/storage/save_data/"+id+".json")
-	data, err := json.Marshal(repo)
+
+	fileData, err := repo.Serialize()
 	if err != nil {
 		return err
 	}
-	if err := os.WriteFile(storagePath, data, 0644); err != nil {
+
+	if err := os.WriteFile(storagePath, fileData, 0644); err != nil {
 		return err
 	}
 	return nil
-}
-
-// LoadGameData loads game data from storage
-func (jsm *JSONStorageManager) LoadGameData() (map[string]interface{}, error) {
-	data, err := os.ReadFile("game_data/game_data.json")
-	if err != nil {
-		return nil, err
-	}
-	var gameData map[string]interface{}
-	if err := json.Unmarshal(data, &gameData); err != nil {
-		return nil, err
-	}
-	return gameData, nil
-
 }

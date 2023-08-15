@@ -20,10 +20,7 @@ func NewCore(conf *config.Config) *Core {
 
 func (c *Core) InitQuestComponents() {
 	c.questRepo = quests.NewQuestRepo(c.coreConfig)
-	err := c.questRepo.LoadFromStorage("quests")
-	if err != nil {
-		config.Log.Errorf("Failed to load quests from storage: %v", err)
-	}
+	c.questRepo.InitQuestRepo()
 	c.questCodex = quests.NewQuestCodex(c.questRepo, c.coreConfig)
 }
 
@@ -32,11 +29,6 @@ func (c *Core) CreateNewQuest(title, questType, description, source string, leve
 	quest, err := c.questCodex.CreateNewQuest(title, questType, description, source, level)
 	if err != nil {
 		config.Log.Errorf("Failed to create new quest: %v", err)
-		return nil, err
-	}
-	err = c.questRepo.SaveToStorage("quests")
-	if err != nil {
-		config.Log.Errorf("Failed to save quests to storage: %v", err)
 		return nil, err
 	}
 	return quest, nil
