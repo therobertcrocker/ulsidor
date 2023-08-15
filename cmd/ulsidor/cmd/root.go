@@ -1,28 +1,29 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/therobertcrocker/ulsidor/cmd/ulsidor/cmd/quests"
+	"github.com/therobertcrocker/ulsidor/internal/core"
 )
 
-// rootCmd represents the base command when called without any subcommands
+var coreInstance *core.Core
+
 var RootCmd = &cobra.Command{
 	Use:   "ulsidor",
 	Short: "Ulsidor: A GM Tool by Gestalt",
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-
-	},
+	// ... other properties ...
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	err := RootCmd.Execute()
-	if err != nil {
+func Execute(core *core.Core) {
+	coreInstance = core
+	questsCmd := quests.NewQuestsCmd(coreInstance)
+	RootCmd.AddCommand(questsCmd)
+
+	if err := RootCmd.Execute(); err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
 }
