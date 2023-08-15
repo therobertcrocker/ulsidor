@@ -1,33 +1,29 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package quests
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 )
 
-// createCmd represents the create command
-var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create a new quest",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("create called")
-	},
-}
+func NewCreateCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "create",
+		Short: "Create a new quest",
+		Run: func(cmd *cobra.Command, args []string) {
+			// Extract necessary arguments from args or flags
+			title := "test"
+			questType := "test"
+			description := "test"
+			source := "test"
+			level := 1
 
-func init() {
-	questsCmd.AddCommand(createCmd)
+			_, err := coreInstance.CreateNewQuest(title, questType, description, source, level)
+			if err != nil {
+				// Handle error
+				log.Fatalf("Failed to create new quest: %v", err)
+			}
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// createCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// createCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+		},
+	}
 }
