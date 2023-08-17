@@ -5,6 +5,15 @@ go 1.20
 require github.com/tdewolff/canvas v0.0.0-20230725155945-641901f69684
 
 require (
+	github.com/AlecAivazis/survey/v2 v2.3.7 // indirect
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
+	github.com/mattn/go-colorable v0.1.2 // indirect
+	github.com/mattn/go-isatty v0.0.8 // indirect
+	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
+	golang.org/x/term v0.5.0 // indirect
+)
+
+require (
 	github.com/ByteArena/poly2tri-go v0.0.0-20170716161910-d102ad91854f // indirect
 	github.com/adrg/strutil v0.3.0 // indirect
 	github.com/adrg/sysfont v0.1.2 // indirect

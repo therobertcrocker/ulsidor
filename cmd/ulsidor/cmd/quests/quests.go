@@ -20,7 +20,9 @@ func NewQuestsCmd(core *core.Core) *cobra.Command {
 	}
 
 	createCmd := NewCreateCmd()
+	expCreateCmd := NewTestCreateCmd()
 	questsCmd.AddCommand(createCmd)
+	questsCmd.AddCommand(expCreateCmd)
 
 	return questsCmd
 }

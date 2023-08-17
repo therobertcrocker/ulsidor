@@ -21,8 +21,7 @@ func NewJSONStorageManager(conf *config.Config) *JSONStorageManager {
 
 // LoadRepo loads data from storage into a repository.
 func (jsm *JSONStorageManager) LoadRepo(id string, repo interfaces.Repository) error {
-	baseDir := jsm.storageConfig.BasePath
-	storagePath := filepath.Join(baseDir, "internal/storage/save_data/"+id+".json")
+	storagePath := filepath.Join("internal/storage/save_data/" + id + ".json")
 	fileData, err := os.ReadFile(storagePath)
 	if err != nil {
 		return err
@@ -32,8 +31,7 @@ func (jsm *JSONStorageManager) LoadRepo(id string, repo interfaces.Repository) e
 
 // SaveRepo saves data from a repository to storage.
 func (jsm *JSONStorageManager) SaveRepo(id string, repo interfaces.Repository) error {
-	baseDir := jsm.storageConfig.BasePath
-	storagePath := filepath.Join(baseDir, "internal/storage/save_data/"+id+".json")
+	storagePath := filepath.Join("internal/storage/save_data/" + id + ".json")
 
 	fileData, err := repo.Serialize()
 	if err != nil {

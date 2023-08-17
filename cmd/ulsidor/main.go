@@ -26,7 +26,7 @@ func main() {
 
 func loadConfiguration() {
 	var err error
-	mainConfig, err = config.LoadConfig("../../internal/config/game_data.json")
+	mainConfig, err = config.LoadConfig("internal/config/config.json")
 
 	if err != nil {
 		panic(fmt.Errorf("fatal error loading game data: %s", err))
