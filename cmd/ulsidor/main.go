@@ -40,7 +40,7 @@ func loadConfiguration() {
 }
 
 func initStorage() {
-	storageManager = storage.NewJSONStorageManager()
+	storageManager = storage.NewJSONStorageManager(mainConfig)
 }
 
 func loadGameData() {

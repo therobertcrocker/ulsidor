@@ -1,3 +1,4 @@
 {
-    "log_level": "debug"
+    "log_level": "debug",
+    "entity_storage_path": "storage/save_data/"
 }
