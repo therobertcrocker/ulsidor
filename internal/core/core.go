@@ -2,33 +2,42 @@ package core
 
 import (
 	"github.com/therobertcrocker/ulsidor/internal/components/quests"
-	"github.com/therobertcrocker/ulsidor/internal/config"
+	"github.com/therobertcrocker/ulsidor/internal/data/config"
+	dataManager "github.com/therobertcrocker/ulsidor/internal/data/game"
+	"github.com/therobertcrocker/ulsidor/internal/data/utils"
+	"github.com/therobertcrocker/ulsidor/internal/interfaces"
 )
 
 type Core struct {
 	questCodex *quests.QuestCodex
 	questRepo  quests.QuestRepository
-	coreConfig *config.Config
+	storage    interfaces.StorageManager
+	config     *config.Config
+	gameData   *dataManager.GameData
 }
 
-func NewCore(conf *config.Config) *Core {
+func NewCore(conf *config.Config, storage interfaces.StorageManager, gd *dataManager.GameData) *Core {
 	// Load global game data
 	return &Core{
-		coreConfig: conf,
+		config:   conf,
+		storage:  storage,
+		gameData: gd,
 	}
 }
 
 func (c *Core) InitQuestComponents() {
-	c.questRepo = quests.NewQuestRepo(c.coreConfig)
-	c.questRepo.InitQuestRepo()
-	c.questCodex = quests.NewQuestCodex(c.questRepo, c.coreConfig)
+	c.questRepo = quests.NewQuestRepo(c.storage)
+	if err := c.questRepo.Init(); err != nil {
+		utils.Log.Errorf("Failed to initialize quest repository: %v", err)
+	}
+	c.questCodex = quests.NewQuestCodex(c.questRepo, c.gameData)
 }
 
 // CreateNewQuest creates a new quest.
 func (c *Core) CreateNewQuest(title, questType, description, source string, level int) (*quests.Quest, error) {
 	quest, err := c.questCodex.CreateNewQuest(title, questType, description, source, level)
 	if err != nil {
-		config.Log.Errorf("Failed to create new quest: %v", err)
+		utils.Log.Errorf("Failed to create new quest: %v", err)
 		return nil, err
 	}
 	return quest, nil

@@ -8,28 +8,45 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/therobertcrocker/ulsidor/cmd/ulsidor/cmd"
-	"github.com/therobertcrocker/ulsidor/internal/config"
 	"github.com/therobertcrocker/ulsidor/internal/core"
+	"github.com/therobertcrocker/ulsidor/internal/data/config"
+	"github.com/therobertcrocker/ulsidor/internal/data/game"
+	"github.com/therobertcrocker/ulsidor/internal/data/storage"
+	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 )
 
 var mainConfig *config.Config
+var storageManager *storage.JSONStorageManager
+var gameData *game.GameData
 
 func main() {
 
 	loadConfiguration()
-
 	loadLogger()
 
-	coreInstance := core.NewCore(mainConfig)
+	initStorage()
+	loadGameData()
+
+	coreInstance := core.NewCore(mainConfig, storageManager, gameData)
 	cmd.Execute(coreInstance)
 }
 
 func loadConfiguration() {
-	var err error
-	mainConfig, err = config.LoadConfig("internal/config/config.json")
 
+	err := utils.LoadJSONData("internal/data/config/config.json", &mainConfig)
 	if err != nil {
-		panic(fmt.Errorf("fatal error loading game data: %s", err))
+		panic(fmt.Sprintf("Failed to load configuration: %v", err))
+	}
+}
+
+func initStorage() {
+	storageManager = storage.NewJSONStorageManager()
+}
+
+func loadGameData() {
+	err := utils.LoadJSONData("internal/data/game/game_data.json", &gameData)
+	if err != nil {
+		panic(fmt.Sprintf("Failed to load game data: %v", err))
 	}
 }
 
@@ -45,5 +62,5 @@ func loadLogger() {
 		panic(fmt.Sprintf("Invalid log level: %v", err))
 	}
 
-	config.InitLogger(level)
+	utils.InitLogger(level)
 }

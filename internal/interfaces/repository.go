@@ -3,6 +3,7 @@ package interfaces
 // Repository is the interface for a repository
 
 type Repository interface {
+	Init() error
 	Serialize() ([]byte, error)
 	Deserialize(data []byte) error
 }

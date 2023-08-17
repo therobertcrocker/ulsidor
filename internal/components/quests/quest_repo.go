@@ -4,26 +4,22 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/therobertcrocker/ulsidor/internal/config"
 	"github.com/therobertcrocker/ulsidor/internal/interfaces"
-	"github.com/therobertcrocker/ulsidor/internal/storage"
 )
 
 // QuestRepository defines the operations that a QuestRepo should support.
 type QuestRepository interface {
 	interfaces.Repository
 	GetQuestByID(id string) (*Quest, error)
-	InitQuestRepo() error
 	AddNewQuest(quest *Quest) error
 	UpdateQuest(id string, quest *Quest) error
 	DeleteQuest(id string) error
 }
 
 type QuestRepo struct {
-	Metadata     interfaces.Metadata `json:"metadata"`
-	Quests       map[string]Quest    `json:"quests"`
-	Storage      interfaces.StorageManager
-	questsConfig *config.Config
+	Metadata interfaces.Metadata `json:"metadata"`
+	Quests   map[string]Quest    `json:"quests"`
+	Storage  interfaces.StorageManager
 }
 
 type QuestFile struct {
@@ -32,22 +28,16 @@ type QuestFile struct {
 }
 
 // NewQuestRepo returns a new instance of QuestRepo.
-func NewQuestRepo(conf *config.Config) *QuestRepo {
+func NewQuestRepo(storage interfaces.StorageManager) *QuestRepo {
 	return &QuestRepo{
-		Quests:       make(map[string]Quest),
-		Storage:      storage.NewJSONStorageManager(conf),
-		questsConfig: conf,
+		Quests:  make(map[string]Quest),
+		Storage: storage,
 	}
 }
 
-// InitQuestRepo initializes the quest repository
-func (qr *QuestRepo) InitQuestRepo() error {
-	err := qr.Storage.LoadRepo("quests", qr)
-	if err != nil {
-		config.Log.Errorf("Failed to load quest repository: %v", err)
-		return err
-	}
-	return nil
+// Init initializes the repo.
+func (qr *QuestRepo) Init() error {
+	return qr.Storage.LoadRepo("quests", qr)
 }
 
 // GetQuestByID fetches a quest by ID.
