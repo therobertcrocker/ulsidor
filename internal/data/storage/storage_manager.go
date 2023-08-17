@@ -4,20 +4,24 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/therobertcrocker/ulsidor/internal/data/config"
 	"github.com/therobertcrocker/ulsidor/internal/interfaces"
 )
 
 type JSONStorageManager struct {
+	config *config.Config
 }
 
 // NewJSONStorageManager returns a new instance of JSONStorageManager
-func NewJSONStorageManager() *JSONStorageManager {
-	return &JSONStorageManager{}
+func NewJSONStorageManager(conf *config.Config) *JSONStorageManager {
+	return &JSONStorageManager{
+		config: conf,
+	}
 }
 
 // LoadRepo loads data from storage into a repository.
 func (jsm *JSONStorageManager) LoadRepo(id string, repo interfaces.Repository) error {
-	storagePath := filepath.Join("internal/storage/save_data/" + id + ".json")
+	storagePath := filepath.Join(jsm.config.EntityStoragePath + id + ".json")
 	fileData, err := os.ReadFile(storagePath)
 	if err != nil {
 		return err
@@ -27,7 +31,7 @@ func (jsm *JSONStorageManager) LoadRepo(id string, repo interfaces.Repository) e
 
 // SaveRepo saves data from a repository to storage.
 func (jsm *JSONStorageManager) SaveRepo(id string, repo interfaces.Repository) error {
-	storagePath := filepath.Join("internal/storage/save_data/" + id + ".json")
+	storagePath := filepath.Join(jsm.config.EntityStoragePath + id + ".json")
 
 	fileData, err := repo.Serialize()
 	if err != nil {
