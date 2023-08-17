@@ -2,7 +2,7 @@ package quests
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/therobertcrocker/ulsidor/internal/config"
+	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 )
 
 func NewCreateCmd() *cobra.Command {
@@ -20,7 +20,7 @@ func NewCreateCmd() *cobra.Command {
 			_, err := coreInstance.CreateNewQuest(title, questType, description, source, level)
 			if err != nil {
 				// Handle error
-				config.Log.Errorf("Failed to create new quest: %v", err)
+				utils.Log.Errorf("Failed to create new quest: %v", err)
 			}
 
 		},

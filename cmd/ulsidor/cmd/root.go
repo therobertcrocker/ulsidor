@@ -5,8 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/therobertcrocker/ulsidor/cmd/ulsidor/cmd/quests"
-	"github.com/therobertcrocker/ulsidor/internal/config"
 	"github.com/therobertcrocker/ulsidor/internal/core"
+	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 )
 
 var coreInstance *core.Core
@@ -23,7 +23,7 @@ func Execute(core *core.Core) {
 	RootCmd.AddCommand(questsCmd)
 
 	if err := RootCmd.Execute(); err != nil {
-		config.Log.Error(err)
+		utils.Log.Error(err)
 		os.Exit(1)
 	}
 }

@@ -4,19 +4,15 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/therobertcrocker/ulsidor/internal/config"
 	"github.com/therobertcrocker/ulsidor/internal/interfaces"
 )
 
 type JSONStorageManager struct {
-	storageConfig *config.Config
 }
 
 // NewJSONStorageManager returns a new instance of JSONStorageManager
-func NewJSONStorageManager(conf *config.Config) *JSONStorageManager {
-	return &JSONStorageManager{
-		storageConfig: conf,
-	}
+func NewJSONStorageManager() *JSONStorageManager {
+	return &JSONStorageManager{}
 }
 
 // LoadRepo loads data from storage into a repository.
