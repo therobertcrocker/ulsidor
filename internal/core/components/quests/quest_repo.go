@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/therobertcrocker/ulsidor/internal/interfaces"
+	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces"
 )
 
 // QuestRepository defines the operations that a QuestRepo should support.

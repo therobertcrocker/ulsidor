@@ -1,7 +1,7 @@
 package quests
 
 import (
-	"github.com/therobertcrocker/ulsidor/internal/components/quests/data"
+	"github.com/therobertcrocker/ulsidor/internal/core/components/quests/data"
 )
 
 type Quest struct {

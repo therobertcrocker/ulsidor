@@ -1,11 +1,12 @@
 package core
 
 import (
-	"github.com/therobertcrocker/ulsidor/internal/components/quests"
+	"github.com/therobertcrocker/ulsidor/internal/core/components/quests"
 	"github.com/therobertcrocker/ulsidor/internal/data/config"
 	dataManager "github.com/therobertcrocker/ulsidor/internal/data/game"
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
-	"github.com/therobertcrocker/ulsidor/internal/interfaces"
+	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces"
+	"github.com/therobertcrocker/ulsidor/internal/domain/types"
 )
 
 type Core struct {
@@ -34,11 +35,12 @@ func (c *Core) InitQuestComponents() {
 }
 
 // CreateNewQuest creates a new quest.
-func (c *Core) CreateNewQuest(title, questType, description, source string, level int) (*quests.Quest, error) {
-	quest, err := c.questCodex.CreateNewQuest(title, questType, description, source, level)
+func (c *Core) CreateNewQuest(questInput *types.CreateQuestInput) error {
+	quest, err := c.questCodex.CreateNewQuest(questInput)
 	if err != nil {
 		utils.Log.Errorf("Failed to create new quest: %v", err)
-		return nil, err
+		return err
 	}
-	return quest, nil
+	utils.Log.Infof("Created new quest: %v", quest)
+	return nil
 }
