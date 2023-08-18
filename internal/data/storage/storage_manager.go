@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/therobertcrocker/ulsidor/internal/data/config"
-	"github.com/therobertcrocker/ulsidor/internal/interfaces"
+	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces"
 )
 
 type JSONStorageManager struct {
