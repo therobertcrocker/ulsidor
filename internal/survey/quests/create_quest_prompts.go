@@ -89,7 +89,7 @@ func promptForQuestLevel() (int, error) {
 // promptForQuestDescription prompts the user for the description of the quest
 func promptForQuestDescription() (string, error) {
 	var description string
-	prompt := &survey.Input{
+	prompt := &survey.Multiline{
 		Message: "What is the description of the quest?",
 	}
 	err := survey.AskOne(prompt, &description)
