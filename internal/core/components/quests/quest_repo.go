@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces"
 )
 
@@ -45,15 +46,24 @@ func (qr *QuestRepo) GetQuestByID(id string) (*Quest, error) {
 	if quest, exists := qr.Quests[id]; exists {
 		return &quest, nil
 	}
-	return nil, errors.New("quest not found")
+	return nil, errors.New("quest not found with id " + id)
 }
 
 // AddNewQuest adds a new quest to the repo.
 func (qr *QuestRepo) AddNewQuest(quest *Quest) error {
+	utils.Log.Debugf("Adding new quest %s to repository", quest.Title)
+
+	// Check if quest already exists
+	utils.Log.Debugf("Checking if quest already exists with id %s", quest.ID)
 	if _, exists := qr.Quests[quest.ID]; exists {
-		return errors.New("quest already exists")
+		return errors.New("quest already exists with id " + quest.ID + "already exists")
 	}
+
+	// Add quest to repo
 	qr.Quests[quest.ID] = *quest
+
+	// Save repo
+	utils.Log.Debugf("Saving quest %s to repository", quest.Title)
 	qr.Storage.SaveRepo("quests", qr)
 	return nil
 }
@@ -61,7 +71,7 @@ func (qr *QuestRepo) AddNewQuest(quest *Quest) error {
 // UpdateQuest updates an existing quest.
 func (qr *QuestRepo) UpdateQuest(id string, quest *Quest) error {
 	if _, exists := qr.Quests[id]; !exists {
-		return errors.New("quest not found")
+		return errors.New("quest not found with id " + id)
 	}
 	qr.Quests[id] = *quest
 	return nil
@@ -70,7 +80,7 @@ func (qr *QuestRepo) UpdateQuest(id string, quest *Quest) error {
 // DeleteQuest removes a quest from the repo.
 func (qr *QuestRepo) DeleteQuest(id string) error {
 	if _, exists := qr.Quests[id]; !exists {
-		return errors.New("quest not found")
+		return errors.New("quest not found with id " + id)
 	}
 	delete(qr.Quests, id)
 	return nil
