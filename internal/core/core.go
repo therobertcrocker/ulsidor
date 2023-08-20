@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+
 	"github.com/therobertcrocker/ulsidor/internal/core/components/quests"
 	"github.com/therobertcrocker/ulsidor/internal/data/config"
 	dataManager "github.com/therobertcrocker/ulsidor/internal/data/game"
@@ -38,9 +40,8 @@ func (c *Core) InitQuestComponents() {
 func (c *Core) CreateNewQuest(questInput *types.CreateQuestInput) error {
 	quest, err := c.questCodex.CreateNewQuest(questInput)
 	if err != nil {
-		utils.Log.Errorf("Failed to create new quest: %v", err)
-		return err
+		return fmt.Errorf("quest creation failed: %w", err)
 	}
-	utils.Log.Infof("Created new quest: %v", quest)
+	utils.Log.Infof("Created new quest %s", quest.Title)
 	return nil
 }

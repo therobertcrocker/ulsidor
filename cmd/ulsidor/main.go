@@ -5,6 +5,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/sirupsen/logrus"
 	"github.com/therobertcrocker/ulsidor/cmd/ulsidor/cmd"
@@ -35,7 +36,8 @@ func loadConfiguration() {
 
 	err := utils.LoadJSONData("internal/data/config/config.json", &mainConfig)
 	if err != nil {
-		panic(fmt.Sprintf("Failed to load configuration: %v", err))
+		utils.Log.Fatalf("Failed to load configuration: %v", err)
+		os.Exit(1)
 	}
 }
 
@@ -46,7 +48,8 @@ func initStorage() {
 func loadGameData() {
 	err := utils.LoadJSONData("internal/data/game/game_data.json", &gameData)
 	if err != nil {
-		panic(fmt.Sprintf("Failed to load game data: %v", err))
+		utils.Log.Fatalf("Failed to load game data: %v", err)
+		os.Exit(1)
 	}
 }
 
@@ -59,7 +62,8 @@ func loadLogger() {
 
 	level, err := logrus.ParseLevel(logLevel)
 	if err != nil {
-		panic(fmt.Sprintf("Invalid log level: %v", err))
+		fmt.Printf("Invalid log level: %s\n", logLevel)
+		os.Exit(1)
 	}
 
 	utils.InitLogger(level)

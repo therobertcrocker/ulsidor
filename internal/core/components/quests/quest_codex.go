@@ -1,7 +1,10 @@
 package quests
 
 import (
+	"fmt"
+
 	"github.com/therobertcrocker/ulsidor/internal/data/game"
+	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 	"github.com/therobertcrocker/ulsidor/internal/domain/types"
 )
 
@@ -20,7 +23,7 @@ func NewQuestCodex(repo QuestRepository, gd *game.GameData) *QuestCodex {
 // CreateNewQuest creates a new quest.
 func (qc *QuestCodex) CreateNewQuest(questInput *types.CreateQuestInput) (*Quest, error) {
 	//builds the quest object and then adds it to the repository
-
+	utils.Log.Debugf("Creating new quest %s", questInput.Title)
 	quest := &Quest{
 		ID:          questInput.Title,
 		Title:       questInput.Title,
@@ -30,12 +33,16 @@ func (qc *QuestCodex) CreateNewQuest(questInput *types.CreateQuestInput) (*Quest
 		Level:       questInput.Level,
 	}
 
-	quest.CalculateRewards(qc.gameData.PartyLevel)
-	err := qc.repo.AddNewQuest(quest)
+	err := quest.CalculateRewards(qc.gameData.PartyLevel)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to calculate quest rewards: %w", err)
 	}
-
+	utils.Log.Debugf("Quest rewards calculated: %v", quest.Reward)
+	err = qc.repo.AddNewQuest(quest)
+	if err != nil {
+		return nil, fmt.Errorf("failed to add new quest to repository: %w", err)
+	}
+	utils.Log.Debugf("Quest %s successfully saved to repository", quest.Title)
 	return quest, nil
 
 }
