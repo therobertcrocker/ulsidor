@@ -10,6 +10,7 @@ require (
 	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/mattn/go-isatty v0.0.8 // indirect
 	github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b // indirect
+	go.etcd.io/bbolt v1.3.7 // indirect
 	golang.org/x/term v0.5.0 // indirect
 )
 
