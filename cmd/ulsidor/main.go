@@ -17,7 +17,7 @@ import (
 )
 
 var mainConfig *config.Config
-var storageManager *storage.JSONStorageManager
+var storageManager *storage.BBoltStorageManager
 var gameData *game.GameData
 
 func main() {
@@ -26,6 +26,7 @@ func main() {
 	loadLogger()
 
 	initStorage()
+	defer storageManager.Close()
 	loadGameData()
 
 	coreInstance := core.NewCore(mainConfig, storageManager, gameData)
@@ -42,7 +43,12 @@ func loadConfiguration() {
 }
 
 func initStorage() {
-	storageManager = storage.NewJSONStorageManager(mainConfig)
+	var err error
+	storageManager, err = storage.NewBBoltStorageManager(mainConfig.BBoltStoragePath)
+	if err != nil {
+		utils.Log.Fatalf("Failed to initialize storage: %v", err)
+		os.Exit(1)
+	}
 }
 
 func loadGameData() {

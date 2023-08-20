@@ -28,12 +28,13 @@ func NewCore(conf *config.Config, storage interfaces.StorageManager, gd *dataMan
 	}
 }
 
-func (c *Core) InitQuestComponents() {
+func (c *Core) InitQuestComponents() error {
 	c.questRepo = quests.NewQuestRepo(c.storage)
 	if err := c.questRepo.Init(); err != nil {
-		utils.Log.Errorf("Failed to initialize quest repository: %v", err)
+		return fmt.Errorf("failed to initialize quest repository: %w", err)
 	}
 	c.questCodex = quests.NewQuestCodex(c.questRepo, c.gameData)
+	return nil
 }
 
 // CreateNewQuest creates a new quest.

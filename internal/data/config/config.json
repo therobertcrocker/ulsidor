@@ -1,4 +1,5 @@
 {
     "log_level": "debug",
-    "entity_storage_path": "storage/save_data/"
+    "entity_storage_path": "storage/save_data/",
+    "bbolt_storage_path": "storage/bbolt/ulsidor.db"
 }
