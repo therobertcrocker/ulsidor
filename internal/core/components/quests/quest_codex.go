@@ -6,7 +6,7 @@ import (
 
 	"github.com/therobertcrocker/ulsidor/internal/data/game"
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
-	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces/changelog"
+	"github.com/therobertcrocker/ulsidor/internal/domain/types/changelog"
 	types "github.com/therobertcrocker/ulsidor/internal/domain/types/quests"
 )
 
@@ -47,18 +47,18 @@ func (qc *QuestCodex) CreateNewQuest(questInput *types.CreateQuestInput) (*types
 
 	// create log entry
 	logEntry := changelog.LogEntry{
-		Timestamp: timestamp,
-		Action:    "create",
-		EntityID:  quest.ID,
-		Changes: []changelog.ChangeInterface{
-			&changelog.NewQuestChange{
-				Field: "quest",
-				Value: *quest,
+		Timestamp:   timestamp,
+		EntityID:    quest.ID,
+		Description: fmt.Sprintf("Quest %s created", quest.Title),
+		Keywords:    []string{"ADD_QUEST"},
+		Changes: []changelog.ChangeDetail{
+			{
+				ReferenceID: quest.ID,
+				OldValue:    "",
+				NewValue:    quest.Title,
 			},
 		},
 	}
-
-	logEntry.Description = logEntry.Changes[0].DescribeChange()
 
 	err = qc.repo.AddNewQuest(quest, logEntry)
 	if err != nil {

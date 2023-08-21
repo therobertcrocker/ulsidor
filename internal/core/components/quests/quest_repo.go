@@ -8,7 +8,7 @@ import (
 
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces"
-	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces/changelog"
+	"github.com/therobertcrocker/ulsidor/internal/domain/types/changelog"
 	types "github.com/therobertcrocker/ulsidor/internal/domain/types/quests"
 )
 
@@ -114,30 +114,30 @@ func (qr *QuestRepo) DeleteQuest(id string) error {
 
 // Serialize serializes the repo to JSON.
 func (qr *QuestRepo) Serialize() (map[string][]byte, error) {
-	serielizedData := make(map[string][]byte)
+	serializedData := make(map[string][]byte)
 
 	// serialize quest data
 	data, err := json.Marshal(qr.Quests)
 	if err != nil {
 		return nil, err
 	}
-	serielizedData["data"] = data
+	serializedData["data"] = data
 
 	// serialize quest metadata
 	metadata, err := json.Marshal(qr.Metadata)
 	if err != nil {
 		return nil, err
 	}
-	serielizedData["metadata"] = metadata
+	serializedData["metadata"] = metadata
 
 	// serialize quest changelog
 	changelog, err := json.Marshal(qr.ChangeLog)
 	if err != nil {
 		return nil, err
 	}
-	serielizedData["changelog"] = changelog
+	serializedData["changelog"] = changelog
 
-	return serielizedData, nil
+	return serializedData, nil
 }
 
 // Deserialize deserializes the repo from JSON.

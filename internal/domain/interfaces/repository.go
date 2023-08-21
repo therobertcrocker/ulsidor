@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces/changelog"
+	"github.com/therobertcrocker/ulsidor/internal/domain/types/changelog"
 )
 
 // Repository is the interface for a repository
