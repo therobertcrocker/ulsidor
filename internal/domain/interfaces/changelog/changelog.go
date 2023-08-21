@@ -10,7 +10,7 @@ type ChangeInterface interface {
 }
 
 type LogEntry struct {
-	Timestamp   int64             `json:"timestamp"` // Unix timestamp
+	Timestamp   string            `json:"timestamp"` // Unix timestamp
 	Action      string            `json:"action"`
 	EntityID    string            `json:"entityID"`
 	Description string            `json:"description"`

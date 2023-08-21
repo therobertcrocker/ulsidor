@@ -7,6 +7,15 @@ import (
 	"github.com/therobertcrocker/ulsidor/internal/domain/types/quests"
 )
 
+type NewQuestChange struct {
+	Field string       `json:"field"`
+	Value quests.Quest `json:"value"`
+}
+
+func (nqc *NewQuestChange) DescribeChange() string {
+	return fmt.Sprintf("New quest created: Title: %s, Level: %d, Type: %s", nqc.Value.Title, nqc.Value.Level, nqc.Value.QuestType)
+}
+
 type ObjectiveChange struct {
 	Field    string           `json:"field"`
 	OldValue quests.Objective `json:"oldValue"`
@@ -17,7 +26,7 @@ func (oc *ObjectiveChange) DescribeChange() string {
 	var changes []string
 
 	if oc.OldValue.ID != oc.NewValue.ID {
-		changes = append(changes, fmt.Sprintf("ID changed from %s to %s", oc.OldValue.ID, oc.NewValue.ID))
+		changes = append(changes, fmt.Sprintf("ID changed from %d to %d", oc.OldValue.ID, oc.NewValue.ID))
 	}
 	if oc.OldValue.Title != oc.NewValue.Title {
 		changes = append(changes, fmt.Sprintf("Title changed from %s to %s", oc.OldValue.Title, oc.NewValue.Title))
