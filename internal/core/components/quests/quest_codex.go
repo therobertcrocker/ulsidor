@@ -5,7 +5,7 @@ import (
 
 	"github.com/therobertcrocker/ulsidor/internal/data/game"
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
-	"github.com/therobertcrocker/ulsidor/internal/domain/types"
+	types "github.com/therobertcrocker/ulsidor/internal/domain/types/quests"
 )
 
 type QuestCodex struct {
@@ -21,10 +21,13 @@ func NewQuestCodex(repo QuestRepository, gd *game.GameData) *QuestCodex {
 }
 
 // CreateNewQuest creates a new quest.
-func (qc *QuestCodex) CreateNewQuest(questInput *types.CreateQuestInput) (*Quest, error) {
+func (qc *QuestCodex) CreateNewQuest(questInput *types.CreateQuestInput) (*types.Quest, error) {
 	//builds the quest object and then adds it to the repository
 	utils.Log.Debugf("Creating new quest %s", questInput.Title)
-	quest := &Quest{
+	quest := &types.Quest{
+		Metadata: types.QuestMetadata{
+			NextObjectiveID: 0,
+		},
 		ID:          questInput.Title,
 		Title:       questInput.Title,
 		QuestType:   questInput.QuestType,

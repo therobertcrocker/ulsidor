@@ -3,31 +3,36 @@ package quests
 import (
 	"errors"
 
-	"github.com/therobertcrocker/ulsidor/internal/core/components/quests/data"
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 )
 
 type Quest struct {
-	ID          string      `json:"id"`
-	Title       string      `json:"title"`
-	QuestType   string      `json:"quest_type"`
-	Status      string      `json:"status"`
-	Description string      `json:"description"`
-	Level       int         `json:"level"`
-	Source      string      `json:"source"`
-	Reward      Reward      `json:"reward"`
-	Objectives  []Objective `json:"objectives"`
+	Metadata      QuestMetadata     `json:"metadata"`
+	ID            string            `json:"id"`
+	Title         string            `json:"title"`
+	QuestType     string            `json:"quest_type"`
+	Status        string            `json:"status"`
+	QuestCategory string            `json:"quest_category"`
+	Description   string            `json:"description"`
+	Level         int               `json:"level"`
+	Source        string            `json:"source"`
+	Reward        Reward            `json:"reward"`
+	Objectives    map[int]Objective `json:"objectives"`
+}
+
+type QuestMetadata struct {
+	NextObjectiveID int `json:"next_objective_id"`
 }
 
 type Reward struct {
 	Experience     int `json:"experience"`
 	Gold           int `json:"gold"`
 	TreasureRating int `json:"treasure_rating"`
-	Repuation      int `json:"reputation"`
+	Reputation     int `json:"reputation"`
 }
 
 type Objective struct {
-	ID          string `json:"id"`
+	ID          int    `json:"id"`
 	Title       string `json:"title"`
 	Completed   bool   `json:"completed"`
 	Description string `json:"description"`
@@ -36,6 +41,12 @@ type Objective struct {
 // GetID returns the Quest ID.
 func (q *Quest) GetID() string {
 	return q.ID
+}
+
+func (q *Quest) AddNewObjective(objective Objective) {
+	objective.ID = q.Metadata.NextObjectiveID
+	q.Objectives[objective.ID] = objective
+	q.Metadata.NextObjectiveID++
 }
 
 func (q *Quest) CalculateRewards(partyLevel int) error {
@@ -60,11 +71,11 @@ func calcExp(level, partyLevel int) int {
 
 	switch {
 	case relativeLevel < -2:
-		return data.ExpPerLevel[-2]
+		return ExpPerLevel[-2]
 	case relativeLevel >= -2 && relativeLevel <= 3:
-		return data.ExpPerLevel[relativeLevel]
+		return ExpPerLevel[relativeLevel]
 	case relativeLevel > 3:
-		return data.ExpPerLevel[3]
+		return ExpPerLevel[3]
 	}
 
 	return 0
@@ -73,8 +84,8 @@ func calcExp(level, partyLevel int) int {
 
 func calcGold(level, partyLevel int, class string) int {
 	relativeLevel := level - partyLevel
-	gold := data.GoldByLevel[partyLevel+relativeLevel+data.ClassMultiplier[class]]
-	missions := data.MissionsPerLevel(relativeLevel)
+	gold := GoldByLevel[partyLevel+relativeLevel+ClassMultiplier[class]]
+	missions := MissionsPerLevel(relativeLevel)
 
 	if missions == 0 {
 		return 0

@@ -1,4 +1,4 @@
-package data
+package quests
 
 var ExpPerLevel = map[int]int{
 	-2: 200,
