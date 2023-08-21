@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
-	"github.com/therobertcrocker/ulsidor/internal/domain/types"
+	types "github.com/therobertcrocker/ulsidor/internal/domain/types/quests"
 	prompts "github.com/therobertcrocker/ulsidor/internal/survey/quests"
 )
 

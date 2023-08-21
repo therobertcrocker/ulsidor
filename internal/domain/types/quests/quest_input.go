@@ -1,4 +1,4 @@
-package types
+package quests
 
 type CreateQuestInput struct {
 	Title       string

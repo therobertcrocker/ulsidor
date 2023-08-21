@@ -2,7 +2,7 @@ package quests
 
 import (
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/therobertcrocker/ulsidor/internal/domain/types"
+	types "github.com/therobertcrocker/ulsidor/internal/domain/types/quests"
 )
 
 // CollectQuestInput collects the input for a quest from the user

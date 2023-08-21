@@ -8,7 +8,7 @@ import (
 	dataManager "github.com/therobertcrocker/ulsidor/internal/data/game"
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces"
-	"github.com/therobertcrocker/ulsidor/internal/domain/types"
+	types "github.com/therobertcrocker/ulsidor/internal/domain/types/quests"
 )
 
 type Core struct {
