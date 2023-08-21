@@ -8,7 +8,7 @@ import (
 
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces"
-	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces/changelog"
+	"github.com/therobertcrocker/ulsidor/internal/domain/types/changelog"
 	types "github.com/therobertcrocker/ulsidor/internal/domain/types/quests"
 )
 
@@ -16,7 +16,7 @@ import (
 type QuestRepository interface {
 	interfaces.Repository
 	GetQuestByID(id string) (*types.Quest, error)
-	AddNewQuest(quest *types.Quest) error
+	AddNewQuest(quest *types.Quest, log changelog.LogEntry) error
 	UpdateQuest(id string, quest *types.Quest) error
 	DeleteQuest(id string) error
 }
@@ -53,6 +53,12 @@ func (qr *QuestRepo) Init() error {
 	return nil
 }
 
+// LogChange logs a change to the quest repository.
+func (qr *QuestRepo) LogChange(entry changelog.LogEntry) error {
+	qr.ChangeLog = append(qr.ChangeLog, entry)
+	return nil
+}
+
 // GetQuestByID fetches a quest by ID.
 func (qr *QuestRepo) GetQuestByID(id string) (*types.Quest, error) {
 	if quest, exists := qr.Quests[id]; exists {
@@ -62,7 +68,7 @@ func (qr *QuestRepo) GetQuestByID(id string) (*types.Quest, error) {
 }
 
 // AddNewQuest adds a new quest to the repo.
-func (qr *QuestRepo) AddNewQuest(quest *types.Quest) error {
+func (qr *QuestRepo) AddNewQuest(quest *types.Quest, log changelog.LogEntry) error {
 	utils.Log.Debugf("Adding new quest %s to repository", quest.Title)
 
 	// Check if quest already exists
@@ -73,6 +79,9 @@ func (qr *QuestRepo) AddNewQuest(quest *types.Quest) error {
 
 	// Add quest to repo
 	qr.Quests[quest.ID] = *quest
+
+	// Log change
+	qr.LogChange(log)
 
 	// Update metadata
 	qr.Metadata.LastUpdated = time.Now().Format(time.RFC3339)
@@ -94,57 +103,6 @@ func (qr *QuestRepo) UpdateQuest(id string, updatedQuest *types.Quest) error {
 	return nil
 }
 
-func detectChanges(oldQuest *types.Quest, newQuest *types.Quest) []changelog.ChangeInterface {
-	var changes []changelog.ChangeInterface
-
-	// check for changes to the quest title
-	if oldQuest.Title != newQuest.Title {
-		changes = append(changes, &changelog.StringChange{
-			Field:    "title",
-			OldValue: oldQuest.Title,
-			NewValue: newQuest.Title,
-		})
-	}
-
-	// check for changes to the quest type
-	if oldQuest.QuestType != newQuest.QuestType {
-		changes = append(changes, &changelog.StringChange{
-			Field:    "quest_type",
-			OldValue: oldQuest.QuestType,
-			NewValue: newQuest.QuestType,
-		})
-	}
-
-	// check for changes to the quest description
-	if oldQuest.Description != newQuest.Description {
-		changes = append(changes, &changelog.StringChange{
-			Field:    "description",
-			OldValue: oldQuest.Description,
-			NewValue: newQuest.Description,
-		})
-	}
-
-	// check for changes to the quest source
-	if oldQuest.Source != newQuest.Source {
-		changes = append(changes, &changelog.StringChange{
-			Field:    "source",
-			OldValue: oldQuest.Source,
-			NewValue: newQuest.Source,
-		})
-	}
-
-	// check for changes to the quest level
-	if oldQuest.Level != newQuest.Level {
-		changes = append(changes, &changelog.IntChange{
-			Field:    "level",
-			OldValue: oldQuest.Level,
-			NewValue: newQuest.Level,
-		})
-	}
-
-	return changes
-}
-
 // DeleteQuest removes a quest from the repo.
 func (qr *QuestRepo) DeleteQuest(id string) error {
 	if _, exists := qr.Quests[id]; !exists {
@@ -156,37 +114,37 @@ func (qr *QuestRepo) DeleteQuest(id string) error {
 
 // Serialize serializes the repo to JSON.
 func (qr *QuestRepo) Serialize() (map[string][]byte, error) {
-	serielizedData := make(map[string][]byte)
+	serializedData := make(map[string][]byte)
 
 	// serialize quest data
 	data, err := json.Marshal(qr.Quests)
 	if err != nil {
 		return nil, err
 	}
-	serielizedData["data"] = data
+	serializedData["data"] = data
 
 	// serialize quest metadata
 	metadata, err := json.Marshal(qr.Metadata)
 	if err != nil {
 		return nil, err
 	}
-	serielizedData["metadata"] = metadata
+	serializedData["metadata"] = metadata
 
 	// serialize quest changelog
 	changelog, err := json.Marshal(qr.ChangeLog)
 	if err != nil {
 		return nil, err
 	}
-	serielizedData["changelog"] = changelog
+	serializedData["changelog"] = changelog
 
-	return serielizedData, nil
+	return serializedData, nil
 }
 
 // Deserialize deserializes the repo from JSON.
 func (qr *QuestRepo) Deserialize(collection map[string][]byte) error {
 	var questsFile QuestFile
 
-	if collection == nil || len(collection) == 0 {
+	if len(collection) == 0 {
 
 		// new collection, populate initial metadata
 		utils.Log.Debugf("New collection, populating initial Metadata")
