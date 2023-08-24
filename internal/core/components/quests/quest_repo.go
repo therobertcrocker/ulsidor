@@ -13,6 +13,8 @@ import (
 )
 
 // QuestRepository defines the operations that a QuestRepo should support.
+//
+//go:generate mockgen -source=quest_repo.go -destination=../../../domain/interfaces/mocks/mock_quest_repo.go -package=mocks
 type QuestRepository interface {
 	interfaces.Repository
 	GetQuestByID(id string) (*types.Quest, error)
