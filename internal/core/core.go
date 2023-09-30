@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/therobertcrocker/ulsidor/internal/core/components/quests"
+	"github.com/therobertcrocker/ulsidor/internal/data"
 	"github.com/therobertcrocker/ulsidor/internal/data/config"
 	dataManager "github.com/therobertcrocker/ulsidor/internal/data/game"
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
@@ -14,7 +15,7 @@ import (
 
 type Core struct {
 	questCodex *quests.QuestCodex
-	questRepo  quests.QuestRepository
+	questRepo  data.EntityRepository
 	storage    interfaces.StorageManager
 	config     *config.Config
 	gameData   *dataManager.GameData
@@ -30,8 +31,8 @@ func NewCore(conf *config.Config, storage interfaces.StorageManager, gd *dataMan
 }
 
 func (c *Core) InitQuestComponents() error {
-	c.questRepo = quests.NewQuestRepo(c.storage)
-	if err := c.questRepo.Init(); err != nil {
+	c.questRepo = data.NewEntityRepo(c.storage)
+	if err := c.questRepo.Init("quests"); err != nil {
 		return fmt.Errorf("failed to initialize quest repository: %w", err)
 	}
 	c.questCodex = quests.NewQuestCodex(c.questRepo, c.gameData)

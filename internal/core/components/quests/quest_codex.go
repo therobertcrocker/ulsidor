@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/therobertcrocker/ulsidor/internal/data"
 	"github.com/therobertcrocker/ulsidor/internal/data/game"
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 	"github.com/therobertcrocker/ulsidor/internal/domain/types/changelog"
@@ -11,11 +12,11 @@ import (
 )
 
 type QuestCodex struct {
-	repo     QuestRepository
+	repo     data.EntityRepository
 	gameData *game.GameData
 }
 
-func NewQuestCodex(repo QuestRepository, gd *game.GameData) *QuestCodex {
+func NewQuestCodex(repo data.EntityRepository, gd *game.GameData) *QuestCodex {
 	return &QuestCodex{
 		repo:     repo,
 		gameData: gd,
@@ -27,11 +28,10 @@ func (qc *QuestCodex) CreateNewQuest(questInput *types.CreateQuestInput) (*types
 	//builds the quest object and then adds it to the repository
 	utils.Log.Debugf("Creating new quest %s", questInput.Title)
 	timestamp := time.Now().Format(time.RFC3339)
-	quest := &types.Quest{
+	quest := types.Quest{
 		Metadata: types.QuestMetadata{
 			NextObjectiveID: 0,
 		},
-		ID:          questInput.Title,
 		Title:       questInput.Title,
 		QuestType:   questInput.QuestType,
 		Description: questInput.Description,
@@ -48,23 +48,23 @@ func (qc *QuestCodex) CreateNewQuest(questInput *types.CreateQuestInput) (*types
 	// create log entry
 	logEntry := changelog.LogEntry{
 		Timestamp:   timestamp,
-		EntityID:    quest.ID,
+		EntityID:    quest.ID(),
 		Description: fmt.Sprintf("Quest %s created", quest.Title),
 		Keywords:    []string{"ADD_QUEST"},
 		Changes: []changelog.ChangeDetail{
 			{
-				ReferenceID: quest.ID,
+				ReferenceID: quest.ID(),
 				OldValue:    "",
 				NewValue:    quest.Title,
 			},
 		},
 	}
 
-	err = qc.repo.AddNewQuest(quest, logEntry)
+	err = qc.repo.AddNewEntity(quest, logEntry)
 	if err != nil {
 		return nil, fmt.Errorf("failed to add new quest to repository: %w", err)
 	}
 	utils.Log.Debugf("Quest %s successfully saved to repository", quest.Title)
-	return quest, nil
+	return &quest, nil
 
 }
