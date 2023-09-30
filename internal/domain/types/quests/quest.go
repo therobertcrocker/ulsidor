@@ -8,7 +8,6 @@ import (
 
 type Quest struct {
 	Metadata      QuestMetadata     `json:"metadata"`
-	ID            string            `json:"id"`
 	Title         string            `json:"title"`
 	QuestType     string            `json:"quest_type"`
 	Status        string            `json:"status"`
@@ -39,8 +38,8 @@ type Objective struct {
 }
 
 // GetID returns the Quest ID.
-func (q *Quest) GetID() string {
-	return q.ID
+func (q Quest) ID() string {
+	return q.Title
 }
 
 func (q *Quest) AddNewObjective(objective Objective) {
