@@ -7,8 +7,8 @@ import (
 // Repository is the interface for a repository
 
 type Repository interface {
-	Init(entityType string) error
-	LogChange(entry changelog.LogEntry)
+	Init() error
+	LogChange(entry changelog.LogEntry) error
 	Serialize() (map[string][]byte, error)
 	Deserialize(collection map[string][]byte) error
 }
