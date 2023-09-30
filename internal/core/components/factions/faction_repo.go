@@ -51,9 +51,9 @@ func (fr *FactionRepo) Init() error {
 }
 
 // LogChange logs a change to the repo
-func (fr *FactionRepo) LogChange(entry changelog.LogEntry) error {
+func (fr *FactionRepo) LogChange(entry changelog.LogEntry) {
 	fr.ChangeLog = append(fr.ChangeLog, entry)
-	return nil
+
 }
 
 // AddNewFaction adds a new faction to the repo

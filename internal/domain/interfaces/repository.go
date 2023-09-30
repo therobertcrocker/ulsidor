@@ -8,7 +8,7 @@ import (
 
 type Repository interface {
 	Init() error
-	LogChange(entry changelog.LogEntry) error
+	LogChange(entry changelog.LogEntry)
 	Serialize() (map[string][]byte, error)
 	Deserialize(collection map[string][]byte) error
 }

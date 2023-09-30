@@ -53,6 +53,11 @@ func (qr *QuestRepo) Init() error {
 	return nil
 }
 
+// LogChange logs a change to the repo.
+func (qr *QuestRepo) LogChange(log changelog.LogEntry) {
+	qr.ChangeLog = append(qr.ChangeLog, log)
+}
+
 // GetQuestByID fetches a quest by ID.
 func (qr *QuestRepo) GetQuestByID(id string) (*types.Quest, error) {
 	if quest, exists := qr.Quests[id]; exists {
