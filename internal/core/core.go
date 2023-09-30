@@ -8,7 +8,8 @@ import (
 	dataManager "github.com/therobertcrocker/ulsidor/internal/data/game"
 	"github.com/therobertcrocker/ulsidor/internal/data/utils"
 	"github.com/therobertcrocker/ulsidor/internal/domain/interfaces"
-	types "github.com/therobertcrocker/ulsidor/internal/domain/types/quests"
+	factionTypes "github.com/therobertcrocker/ulsidor/internal/domain/types/factions"
+	questTypes "github.com/therobertcrocker/ulsidor/internal/domain/types/quests"
 )
 
 type Core struct {
@@ -37,12 +38,21 @@ func (c *Core) InitQuestComponents() error {
 	return nil
 }
 
+func (c *Core) InitFactionComponents() error {
+	return nil
+}
+
 // CreateNewQuest creates a new quest.
-func (c *Core) CreateNewQuest(questInput *types.CreateQuestInput) error {
+func (c *Core) CreateNewQuest(questInput *questTypes.CreateQuestInput) error {
 	quest, err := c.questCodex.CreateNewQuest(questInput)
 	if err != nil {
 		return fmt.Errorf("quest creation failed: %w", err)
 	}
 	utils.Log.Infof("Created new quest %s", quest.Title)
+	return nil
+}
+
+// CreateNewFaction creates a new faction.
+func (c *Core) CreateNewFaction(factionInput *factionTypes.CreateFactionInput) error {
 	return nil
 }

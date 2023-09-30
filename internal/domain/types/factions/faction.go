@@ -1,11 +1,19 @@
 package factions
 
+import "fmt"
+
 type Faction struct {
-	ID        int              `json:"id"`
 	Name      string           `json:"name"`
+	Size      string           `json:"size"`
+	HomeBase  string           `json:"HomeBase"`
 	Skills    SkillBlock       `json:"skills"`
+	Arcane    string           `json:"arcane"`
 	Treasure  int              `json:"treasure"`
 	HitPoints int              `json:"hit_points"`
+	CurrentHP int              `json:"current_hp"`
+	XP        int              `json:"xp"`
+	Income    int              `json:"income"`
+	Upkeep    int              `json:"upkeep"`
 	Assets    map[string]Asset `json:"assets"`
 }
 
@@ -13,29 +21,8 @@ type SkillBlock struct {
 	Cunning int `json:"cunning"`
 	Force   int `json:"force"`
 	Wealth  int `json:"wealth"`
-	Arcane  int `json:"arcane"`
 }
 
-type Asset struct {
-	ID           int      `json:"id"`
-	Name         string   `json:"name"`
-	Type         string   `json:"type"`
-	Cost         int      `json:"cost"`
-	MinumumScore int      `json:"minimum_score"`
-	HitPoints    int      `json:"hit_points"`
-	Arcane       int      `json:"arcane"`
-	Attack       Attack   `json:"attack"`
-	Counter      Damage   `json:"counter"`
-	Qualites     []string `json:"qualities"`
-}
-
-type Attack struct {
-	Trait  string `json:"trait"`
-	Damage Damage `json:"damage"`
-}
-
-type Damage struct {
-	Count    int `json:"count"`
-	Dice     int `json:"dice"`
-	Modifier int `json:"modifier"`
+func (f *Faction) GetID() string {
+	return fmt.Sprintf("faction_%s", f.Name)
 }

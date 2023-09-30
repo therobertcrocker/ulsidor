@@ -53,12 +53,6 @@ func (qr *QuestRepo) Init() error {
 	return nil
 }
 
-// LogChange logs a change to the quest repository.
-func (qr *QuestRepo) LogChange(entry changelog.LogEntry) error {
-	qr.ChangeLog = append(qr.ChangeLog, entry)
-	return nil
-}
-
 // GetQuestByID fetches a quest by ID.
 func (qr *QuestRepo) GetQuestByID(id string) (*types.Quest, error) {
 	if quest, exists := qr.Quests[id]; exists {
@@ -79,9 +73,6 @@ func (qr *QuestRepo) AddNewQuest(quest *types.Quest, log changelog.LogEntry) err
 
 	// Add quest to repo
 	qr.Quests[quest.ID] = *quest
-
-	// Log change
-	qr.LogChange(log)
 
 	// Update metadata
 	qr.Metadata.LastUpdated = time.Now().Format(time.RFC3339)
