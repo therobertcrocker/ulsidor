@@ -30,7 +30,7 @@ func NewCore(conf *config.Config, storage interfaces.StorageManager, gd *dataMan
 
 func (c *Core) InitQuestComponents() error {
 	c.questRepo = quests.NewQuestRepo(c.storage)
-	if err := c.questRepo.Init(); err != nil {
+	if err := c.questRepo.Init("quests"); err != nil {
 		return fmt.Errorf("failed to initialize quest repository: %w", err)
 	}
 	c.questCodex = quests.NewQuestCodex(c.questRepo, c.gameData)
