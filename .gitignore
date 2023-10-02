@@ -2,8 +2,8 @@
 /bin/
 /build/
 
-# storage
-/storage/
+# old directories
+/archive/
 
 # Go module cache
 go.sum
