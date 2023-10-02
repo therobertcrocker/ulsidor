@@ -5,8 +5,6 @@
 # old directories
 /archive/
 
-*.devcontainer/
-
 # Go module cache
 go.sum
 go.mod
@@ -17,6 +15,9 @@ go.mod
 *.swo        # Vim
 *.idea/      # JetBrains IDEs
 *.vscode/    # Visual Studio Code
+
+*.vscode/**
+
 
 # Temporary files
 *.tmp
