@@ -5,6 +5,8 @@
 # old directories
 /archive/
 
+*.devcontainer/
+
 # Go module cache
 go.sum
 go.mod
