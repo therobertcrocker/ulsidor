@@ -45,7 +45,7 @@ func NewQuestRepo(storage interfaces.StorageManager) *QuestRepo {
 }
 
 // Init initializes the repo.
-func (qr *QuestRepo) Init() error {
+func (qr *QuestRepo) Init(EntityType string) error {
 	err := qr.Storage.LoadRepo("quests", qr)
 	if err != nil {
 		return fmt.Errorf("failed to load quest repository: %w", err)
@@ -54,9 +54,9 @@ func (qr *QuestRepo) Init() error {
 }
 
 // LogChange logs a change to the quest repository.
-func (qr *QuestRepo) LogChange(entry changelog.LogEntry) error {
+func (qr *QuestRepo) LogChange(entry changelog.LogEntry) {
 	qr.ChangeLog = append(qr.ChangeLog, entry)
-	return nil
+
 }
 
 // GetQuestByID fetches a quest by ID.
