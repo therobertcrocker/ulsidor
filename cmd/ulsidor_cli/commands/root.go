@@ -5,7 +5,9 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/therobertcrocker/ulsidor/cmd/ulsidor_cli/commands/factions"
 	"github.com/therobertcrocker/ulsidor/internal/core"
+	"github.com/therobertcrocker/ulsidor/utils"
 )
 
 var coreInstance *core.Core
@@ -20,19 +22,13 @@ var rootCmd = &cobra.Command{
 	   `,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		printTitle("GM Tools - Root Operation")
+		utils.PrintTitle("GM Tools - Root Operation")
 	},
-}
-
-func printTitle(text string) {
-	fmt.Println("---------------------------------------------------------------------")
-	fmt.Printf("                 %s\n", text)
-	fmt.Println("---------------------------------------------------------------------")
 }
 
 func Execute(core *core.Core) {
 	coreInstance = core
-	factionscmd := NewFactionsCmd()
+	factionscmd := factions.FactionsCmd(coreInstance)
 	rootCmd.AddCommand(factionscmd)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintf(os.Stderr, "Whoops. There was an error while executing your CLI '%s'", err)

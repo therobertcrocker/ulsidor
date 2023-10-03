@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"strings"
 	"time"
 )
@@ -18,4 +19,10 @@ func DecodeID(encodedID string) []string {
 func Normalize(input string) string {
 	lower := strings.ToLower(input)
 	return strings.ReplaceAll(lower, " ", "-")
+}
+
+func PrintTitle(text string) {
+	fmt.Println("---------------------------------------------------------------------")
+	fmt.Printf("                 %s\n", text)
+	fmt.Println("---------------------------------------------------------------------")
 }

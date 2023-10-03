@@ -1,4 +1,4 @@
-package commands
+package assets
 
 import (
 	"fmt"
@@ -6,84 +6,35 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
+	"github.com/therobertcrocker/ulsidor/internal/core"
 	"github.com/therobertcrocker/ulsidor/internal/machinations"
 	"github.com/therobertcrocker/ulsidor/internal/ui"
 	"github.com/therobertcrocker/ulsidor/utils"
 )
 
 var (
+	coreInstance       *core.Core
 	assetsFilePathFlag string
 	assetIDFlag        string
 )
 
-func NewFactionsCmd() *cobra.Command {
-	factionsCmd := &cobra.Command{
-		Use:   "factions",
-		Short: "Commands for managing factions",
-		Run: func(cmd *cobra.Command, args []string) {
-			printTitle("Machinations - Faction Management")
-		},
-	}
-
-	AddCmd := NewAddFactionCmd()
-	AssetsCmd := NewAssetsCmd()
-	factionsCmd.AddCommand(AddCmd)
-	factionsCmd.AddCommand(AssetsCmd)
-
-	return factionsCmd
-
-}
-
-/*
-===============================================================================
-
-	FACTION COMMANDs
-
-===============================================================================
-*/
-func NewAddFactionCmd() *cobra.Command {
-	addCmd := &cobra.Command{
-		Use:   "add",
-		Short: "Add a new faction",
-		Run: func(cmd *cobra.Command, args []string) {
-			printTitle("Machinations - Create Faction")
-
-			factionInput, err := ui.CollectFactionInput()
-			if err != nil {
-				utils.Log.WithError(err).Error("failed to collect faction input")
-			}
-
-			if err := coreInstance.Factions.Codex.AddFaction(factionInput); err != nil {
-				utils.Log.WithError(err).Error("failed to add faction")
-			}
-
-		},
-	}
-
-	return addCmd
-}
-
-/*
-===============================================================================
-                                 ASSET COMMANDs
-===============================================================================
-*/
-
 // NewAssetsCmd manages the commands for the Asset sub-application.
 // TODO: add a ui for selecting a sub-command if none is provided.
 
-func NewAssetsCmd() *cobra.Command {
+func AssetsCmd(core *core.Core) *cobra.Command {
+
+	coreInstance = core
 	assetsCmd := &cobra.Command{
 		Use:   "assets",
 		Short: "Commands for managing assets",
 		Run: func(cmd *cobra.Command, args []string) {
-			printTitle("Machinations - Asset Management")
+			utils.PrintTitle("Machinations - Asset Management")
 		},
 	}
-	AddAssetCmd := NewAddAssetCmd()
-	LoadAssetsCmd := NewLoadAssetsCmd()
-	GetAssetCmd := NewGetAssetCmd()
-	ClearAssetsCmd := NewClearAssetsCmd()
+	AddAssetCmd := AddAssetCmd()
+	LoadAssetsCmd := LoadAssetsCmd()
+	GetAssetCmd := GetAssetCmd()
+	ClearAssetsCmd := ClearAssetsCmd()
 
 	assetsCmd.AddCommand(AddAssetCmd)
 	assetsCmd.AddCommand(LoadAssetsCmd)
@@ -92,13 +43,19 @@ func NewAssetsCmd() *cobra.Command {
 	return assetsCmd
 }
 
+/*
+===============================================================================
+                                 ASSET COMMANDs
+===============================================================================
+*/
+
 // NewAddAssetCmd allows the user to add a new asset through an interactive UI.
-func NewAddAssetCmd() *cobra.Command {
+func AddAssetCmd() *cobra.Command {
 	addCmd := &cobra.Command{
 		Use:   "add",
 		Short: "Add a new asset",
 		Run: func(cmd *cobra.Command, args []string) {
-			printTitle("Machinations - Create Asset")
+			utils.PrintTitle("Machinations - Create Asset")
 
 			assetInput, err := ui.CollectAssetInput()
 			if err != nil {
@@ -114,12 +71,12 @@ func NewAddAssetCmd() *cobra.Command {
 }
 
 // NewLoadAssetsCmd allows the user to load assets from a file.
-func NewLoadAssetsCmd() *cobra.Command {
+func LoadAssetsCmd() *cobra.Command {
 	loadCmd := &cobra.Command{
 		Use:   "load",
 		Short: "Load assets from a file",
 		Run: func(cmd *cobra.Command, args []string) {
-			printTitle("Machinations - Load Assets")
+			utils.PrintTitle("Machinations - Load Assets")
 
 			filetype := filepath.Ext(assetsFilePathFlag)
 
@@ -162,12 +119,12 @@ func NewLoadAssetsCmd() *cobra.Command {
 }
 
 // NewGetAssetCmd allows the user to get an asset by ID.
-func NewGetAssetCmd() *cobra.Command {
+func GetAssetCmd() *cobra.Command {
 	getCmd := &cobra.Command{
 		Use:   "get",
 		Short: "Get an asset by ID",
 		Run: func(cmd *cobra.Command, args []string) {
-			printTitle("Machinations - Get Asset")
+			utils.PrintTitle("Machinations - Get Asset")
 
 			asset, err := coreInstance.Factions.Assets.GetAsset(assetIDFlag)
 			if err != nil {
@@ -186,12 +143,12 @@ func NewGetAssetCmd() *cobra.Command {
 }
 
 // NewClearAssetsCmd allows the user to clear all assets from the codex.
-func NewClearAssetsCmd() *cobra.Command {
+func ClearAssetsCmd() *cobra.Command {
 	clearCmd := &cobra.Command{
 		Use:   "clear",
 		Short: "Clear all assets from the codex",
 		Run: func(cmd *cobra.Command, args []string) {
-			printTitle("Machinations - Clear Assets")
+			utils.PrintTitle("Machinations - Clear Assets")
 
 			var confirm bool
 			confirmPrompt := &survey.Confirm{
