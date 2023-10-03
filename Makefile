@@ -8,7 +8,7 @@ all: build
 # Build the project
 build:
 	@echo "Building..."
-	go build -o $(BUILD_DIR)/$(BINARY_NAME) ./cmd/ulsidor
+	go build -o $(BUILD_DIR)/$(BINARY_NAME) ./cmd/ulsidor_cli
 
 # Run the project
 run: build

@@ -18,11 +18,16 @@ var rootCmd = &cobra.Command{
 	   It will eventually feature a number of sub-applications for managing things like Factions, Story Plots, and More.
 	   
 	   `,
+
 	Run: func(cmd *cobra.Command, args []string) {
-
-		fmt.Println("Hello, World!")
-
+		printTitle("GM Tools - Root Operation")
 	},
+}
+
+func printTitle(text string) {
+	fmt.Println("---------------------------------------------------------------------")
+	fmt.Printf("                 %s\n", text)
+	fmt.Println("---------------------------------------------------------------------")
 }
 
 func Execute(core *core.Core) {

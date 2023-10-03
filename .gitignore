@@ -16,7 +16,6 @@ go.mod
 *.idea/      # JetBrains IDEs
 *.vscode/    # Visual Studio Code
 
-*.vscode/**
 
 
 # Temporary files
